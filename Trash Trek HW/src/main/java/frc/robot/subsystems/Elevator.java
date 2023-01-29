@@ -7,6 +7,15 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.PIDController;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
+import com.revrobotics.SparkMaxLimitSwitch;
+
+
 public class Elevator extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public Elevator() {}
@@ -24,6 +33,27 @@ public class Elevator extends SubsystemBase {
           /* one-time action goes here */
         });
   }
+  
+  CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
+  RelativeEncoder m_encoder = m_motor.getEncoder(Type.kQuadrature, 0);
+
+  public void resetEncoders() {
+    m_encoder.setPosition(0);
+  }
+  public double getPos() {
+    return m_encoder.getPosition();
+  }
+
+  public void getLimitSwitch() {
+    m_motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  }
+  private double power;
+
+  public void setVolt(double volts) {
+    power = volts;
+    m_motor.setVoltage(power);
+  }
+  
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
