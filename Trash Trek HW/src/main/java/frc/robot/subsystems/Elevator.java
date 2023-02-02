@@ -11,10 +11,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.hal.SimDevice.Direction;
 import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import com.revrobotics.SparkMaxLimitSwitch;
-
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -33,7 +35,6 @@ public class Elevator extends SubsystemBase {
           /* one-time action goes here */
         });
   }
-  
   CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
   RelativeEncoder m_encoder = m_motor.getEncoder(Type.kQuadrature, 0);
 
@@ -53,6 +54,15 @@ public class Elevator extends SubsystemBase {
     power = volts;
     m_motor.setVoltage(power);
   }
+
+  public void softLimit(double amount) {
+    // Sets the soft limit to amount
+    m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) amount);
+  }
+
+  // public void reverseLimit(double amount) {
+  //   m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) amount);
+  // }
   
 
   /**
