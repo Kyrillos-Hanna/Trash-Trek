@@ -12,19 +12,26 @@ import edu.wpi.first.math.controller.PIDController;
 public class ElevatorUp extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator m_elevator;
+  private double distance;
+  private double position;
+  private final PIDController m_PIDController = new PIDController(1, 0.1, 0.1);
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorUp(Elevator elevator) {
+  public ElevatorUp(Elevator elevator, double inches, double location) {
     m_elevator = elevator;
+    distance = inches;
+    position = 0;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
   }
-  
-  PIDController m_PIDController = new PIDController(1, 0.1, 0.1);
+
+  public void setSoftLimit () {
+    m_elevator.softLimit(distance); //sets soft limit to the amount that we want to travel
+}
 
   // Called when the command is initially scheduled.
   @Override
@@ -36,7 +43,7 @@ public class ElevatorUp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_elevator.setVolt(m_PIDController.calculate(m_elevator.getPos(), 1000));
+    m_elevator.setVolt(m_PIDController.calculate(m_elevator.getPos(), distance));
   }
 
   // Called once the command ends or is interrupted.
