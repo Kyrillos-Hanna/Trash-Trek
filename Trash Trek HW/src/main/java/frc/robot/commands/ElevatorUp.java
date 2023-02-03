@@ -21,7 +21,7 @@ public class ElevatorUp extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorUp(Elevator elevator, double inches, double location) {
+  public ElevatorUp(Elevator elevator, double inches) {
     m_elevator = elevator;
     distance = inches;
     position = 0;
@@ -55,6 +55,6 @@ public class ElevatorUp extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_elevator.getLimitSwitch().isPressed();
   }
 }

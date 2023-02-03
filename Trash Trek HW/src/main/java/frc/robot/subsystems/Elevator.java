@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -45,8 +46,8 @@ public class Elevator extends SubsystemBase {
     return m_encoder.getPosition();
   }
 
-  public void getLimitSwitch() {
-    m_motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  public SparkMaxLimitSwitch getLimitSwitch() {
+    return m_motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
   private double power;
 
@@ -60,11 +61,13 @@ public class Elevator extends SubsystemBase {
     m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) amount);
   }
 
-  // public void reverseLimit(double amount) {
-  //   m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float) amount);
-  // }
+  public void smartDash() {
+    SmartDashboard.putBoolean("limitSwitchPressed", getLimitSwitch().isPressed());
+    SmartDashboard.putNumber("encoderHeight", m_encoder.getPosition());
+  }
+   
   
-
+  
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *

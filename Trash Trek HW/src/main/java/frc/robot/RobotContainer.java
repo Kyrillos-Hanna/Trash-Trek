@@ -6,7 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorUp;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -31,6 +33,31 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
   }
+  private final Elevator m_elevator = new Elevator();
+  private final ElevatorUp m_ElevatorUp = new ElevatorUp(m_elevator, 0);
+  private final ElevatorUp m_2ElevatorUp = new ElevatorUp(m_elevator, 500);
+  private final ElevatorUp m_3ElevatorUp = new ElevatorUp(m_elevator, 1000);
+public ElevatorUp button() {
+  if (m_driverController.b().getAsBoolean()) {
+     return m_ElevatorUp;
+  }
+  else if (m_driverController.x().getAsBoolean()) {
+      return m_2ElevatorUp;
+  }
+  else if (m_driverController.y().getAsBoolean()) {
+    return m_3ElevatorUp;
+  }
+  return null;
+}
+
+
+
+
+
+
+
+
+
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
