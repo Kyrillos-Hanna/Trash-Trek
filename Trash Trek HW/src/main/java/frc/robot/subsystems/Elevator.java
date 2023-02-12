@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Elevator extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public Elevator() {}
+  public Elevator() {
+    m_encoder.setPosition(0);
+    m_motor.setSoftLimit(SoftLimitDirection.kReverse, 0);
+  }
 
   /**
    * Example command factory method.
@@ -39,31 +42,25 @@ public class Elevator extends SubsystemBase {
   CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
   RelativeEncoder m_encoder = m_motor.getEncoder(Type.kQuadrature, 0);
 
+  public PIDController m_PIDController = new PIDController(0.1, 0.1, 0.1);
+
+  SparkMaxLimitSwitch m_LimitSwitch = m_motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  
   public void resetEncoders() {
     m_encoder.setPosition(0);
   }
-  public double getPos() {
+
+  public double getEncoderPositon() {
     return m_encoder.getPosition();
   }
 
-  public SparkMaxLimitSwitch getLimitSwitch() {
-    return m_motor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-  }
-  private double power;
-
-  public void setVolt(double volts) {
-    power = volts;
-    m_motor.setVoltage(power);
+  public boolean getLimitSwitchEnabled() {
+    return m_LimitSwitch.isLimitSwitchEnabled();
   }
 
-  public void softLimit(double amount) {
-    // Sets the soft limit to amount
-    m_motor.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float) amount);
-  }
-
-  public void smartDash() {
-    SmartDashboard.putBoolean("limitSwitchPressed", getLimitSwitch().isPressed());
-    SmartDashboard.putNumber("encoderHeight", m_encoder.getPosition());
+  public double setHeightWithConstraint(double height){
+    double output = m_PIDController.calculate(m_encoder.getPosition(), height);
+    return output;
   }
    
   
@@ -81,6 +78,8 @@ public class Elevator extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("limitSwitchPressed", getLimitSwitchEnabled());
+    SmartDashboard.putNumber("encoderHeight", m_encoder.getPosition());
   }
 
   @Override
