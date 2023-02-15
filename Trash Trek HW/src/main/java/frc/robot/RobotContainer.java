@@ -6,12 +6,17 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorDown;
 import frc.robot.commands.ElevatorUp;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Drivebase;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -34,21 +39,22 @@ public class RobotContainer {
     configureBindings();
   }
   private final Elevator m_elevator = new Elevator();
-  private final ElevatorUp m_ElevatorUp = new ElevatorUp(m_elevator, 0);
-  private final ElevatorUp m_2ElevatorUp = new ElevatorUp(m_elevator, 500);
-  private final ElevatorUp m_3ElevatorUp = new ElevatorUp(m_elevator, 1000);
-public ElevatorUp button() {
-  if (m_driverController.b().getAsBoolean()) {
-     return m_ElevatorUp;
+  private final Drivebase m_drivebase = new Drivebase();
+  private final XboxController m_XboxController = new XboxController(0);
+
+  public void buttonBindings() {
+    new JoystickButton(m_XboxController, 4).onTrue(new ElevatorUp(m_elevator, 1000));
+
+    new JoystickButton(m_XboxController, 3).onTrue(new ElevatorUp(m_elevator, 500));
+    
+    new JoystickButton(m_XboxController, 2).onTrue(new ElevatorDown(m_elevator, 0));
+
+    m_elevator.displayElevatorHeight();
+    m_elevator.getLimitSwitchEnabled();
   }
-  else if (m_driverController.x().getAsBoolean()) {
-      return m_2ElevatorUp;
-  }
-  else if (m_driverController.y().getAsBoolean()) {
-    return m_3ElevatorUp;
-  }
-  return null;
-}
+
+
+
 
 
 

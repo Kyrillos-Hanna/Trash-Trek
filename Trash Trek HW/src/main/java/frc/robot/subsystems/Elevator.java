@@ -39,7 +39,7 @@ public class Elevator extends SubsystemBase {
           /* one-time action goes here */
         });
   }
-  CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
+  public CANSparkMax m_motor = new CANSparkMax(1, MotorType.kBrushless);
   RelativeEncoder m_encoder = m_motor.getEncoder(Type.kQuadrature, 0);
 
   public PIDController m_PIDController = new PIDController(0.1, 0.1, 0.1);
@@ -62,6 +62,10 @@ public class Elevator extends SubsystemBase {
     double output = m_PIDController.calculate(m_encoder.getPosition(), height);
     return output;
   }
+
+  public void displayElevatorHeight() {
+    SmartDashboard.putNumber("elevatorHeight", m_encoder.getPosition());
+  }
    
   
   
@@ -79,11 +83,13 @@ public class Elevator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putBoolean("limitSwitchPressed", getLimitSwitchEnabled());
-    SmartDashboard.putNumber("encoderHeight", m_encoder.getPosition());
+    displayElevatorHeight();
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+
 }
