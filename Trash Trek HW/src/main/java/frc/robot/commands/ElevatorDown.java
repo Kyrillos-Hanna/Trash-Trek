@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.controller.PIDController;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorUp extends CommandBase {
+public class ElevatorDown extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator m_elevator;
   private double height;
@@ -19,7 +19,7 @@ public class ElevatorUp extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorUp(Elevator elevator, double distance) {
+  public ElevatorDown(Elevator elevator, double distance) {
     m_elevator = elevator;
     height = distance;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -47,6 +47,6 @@ public class ElevatorUp extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_elevator.getLimitSwitchEnabled());
+    return (m_elevator.getEncoderPositon() <= height);
   }
 }
